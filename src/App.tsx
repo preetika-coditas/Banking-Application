@@ -1,8 +1,8 @@
 import "./App.css";
-import Dashboard from "./pages/Dashboard/dashboard";
+import Dashboard from "./pages/Dashboard/Dashboard";
 
 function App() {
-  return <div>Welcome !</div>;
+  return <Dashboard />;
 }
 
 export default App;

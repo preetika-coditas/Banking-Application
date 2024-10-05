@@ -1,0 +1,31 @@
+.accordionCard {
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    padding: 10px;
+    color: black;
+  }
+  
+  .accordionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    color: black
+  }
+  
+  .accordionContent {
+    margin-top: 10px;
+  }
+
+  .invoicesTitle {
+    color: black
+  }
+
+  .rotate {
+    transform: rotate(180deg);
+  }
+  .subContainer {
+    display: flex;
+    gap: 5rem;
+  }
+  

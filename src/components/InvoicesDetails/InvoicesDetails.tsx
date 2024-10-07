@@ -38,7 +38,7 @@ const InvoicesDetails: React.FC<InvoicesDetailsProps> = ({
             <tr key={row.invoiceId}>
               <td>
                 <Checkbox
-                  isChecked={isInvoiceChecked(row.invoiceId)} // Check if the invoice is selected
+                  isChecked={isInvoiceChecked(row.invoiceId)}
                   onChange={() =>
                     onInvoiceCheckboxChange(
                       row,
@@ -48,6 +48,7 @@ const InvoicesDetails: React.FC<InvoicesDetailsProps> = ({
                 />
               </td>
               <td>{row.invoiceId || "N/A"}</td>
+              <td>{row.documentType || "N/A"}</td>
               <td>{row.invoiceDate || "N/A"}</td>
               <td>{row.outstandingAmount || "N/A"}</td>
               <td>{row.dueDate || "N/A"}</td>

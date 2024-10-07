@@ -1,31 +1,4 @@
-export interface Invoice {
-  invoiceId: string; // Add this line
-  invoiceNumber: string;
-  customerName: string;
-  invoiceDate: string;
-  outstandingAmount: string;
-  dueDate: string;
-  status: string | null;
-  lastReminder: string;
-  documentDetails?: string; // Ensure this matches your data
-  additionalInfo?: {
-    label: string;
-    value: string;
-    sequence: number;
-  }[];
-}
-
-
-export interface Customer {
-  name: string;
-  customerId: number;
-  totalInvoices: number;
-  outstandingAmount: string;
-  overdueInvoices: number;
-  overdueAmount: string;
-  creditDebitNote: string;
-  invoices: Invoice[];
-}
+import { Customer } from "./types/customerTableTypes";
 
 export const CustomerData: Customer[] = [
   {
@@ -46,62 +19,80 @@ export const CustomerData: Customer[] = [
         dueDate: "18/04/24",
         status: null,
         lastReminder: "25/09/24",
+        invoiceAmount: "0.00",   
+        discount: "0.00",        
+        region: null,            
+        division: "",            
+        documentType: "DEBIT_NOTE",  
+        documentNumber: "",      
         additionalInfo: [
-            {
-                label: "Region",
-                value: "Tamil Nadu",
-                sequence: 1
-            },
-            {
-                label: "Location",
-                value: "",
-                sequence: 2
-            }
+          {
+            label: "Region",
+            value: "Tamil Nadu",
+            sequence: 1
+          },
+          {
+            label: "Location",
+            value: "",
+            sequence: 2
+          }
         ]
+      },
+    {
+      invoiceId: "IN1718000000142017001",
+      invoiceNumber: "IN1718000000142017",
+      customerName: "Anshul trading Company",
+      invoiceDate: "",
+      outstandingAmount: "1000000.00",
+      dueDate: "07/02/18",
+      status: null,
+      lastReminder: "06/09/24",
+      additionalInfo: [
+        {
+          label: "Region",
+          value: "Tamil Nadu",
+          sequence: 1
+        },
+        {
+          label: "Location",
+          value: "",
+          sequence: 2
+        }
+      ],
+      invoiceAmount: "",
+      discount: "",
+      region: null,
+      division: "",
+      documentType: "",
+      documentNumber: ""
     },
     {
-        invoiceId: "IN1718000000142017001",
-        invoiceNumber: "IN1718000000142017",
-        customerName: "Anshul trading Company",
-        invoiceDate: "",
-        outstandingAmount: "1000000.00",
-        dueDate: "07/02/18",
-        status: null,
-        lastReminder: "06/09/24",
-        additionalInfo: [
-            {
-                label: "Region",
-                value: "Tamil Nadu",
-                sequence: 1
-            },
-            {
-                label: "Location",
-                value: "",
-                sequence: 2
-            }
-        ]
-    },
-    {
-        invoiceId: "IN1718000000432024001",
-        invoiceNumber: "IN1718000000432024",
-        customerName: "Anshul trading Company",
-        invoiceDate: "",
-        outstandingAmount: "350000.00",
-        dueDate: "18/04/24",
-        status: null,
-        lastReminder: "06/09/24",
-        additionalInfo: [
-            {
-                label: "Region",
-                value: "Tamil Nadu",
-                sequence: 1
-            },
-            {
-                label: "Location",
-                value: "",
-                sequence: 2
-            }
-        ]
+      invoiceId: "IN1718000000432024001",
+      invoiceNumber: "IN1718000000432024",
+      customerName: "Anshul trading Company",
+      invoiceDate: "",
+      outstandingAmount: "350000.00",
+      dueDate: "18/04/24",
+      status: null,
+      lastReminder: "06/09/24",
+      additionalInfo: [
+        {
+          label: "Region",
+          value: "Tamil Nadu",
+          sequence: 1
+        },
+        {
+          label: "Location",
+          value: "",
+          sequence: 2
+        }
+      ],
+      invoiceAmount: "",
+      discount: "",
+      region: null,
+      division: "",
+      documentType: "",
+      documentNumber: ""
     },     
     ],
   },
@@ -123,7 +114,13 @@ export const CustomerData: Customer[] = [
         dueDate: "22/04/24",
         status: "Overdue by 158 days",
         lastReminder: "27/09/24",
-        customerName: ""
+        customerName: "",
+        invoiceAmount: "",
+        discount: "",
+        region: null,
+        division: "",
+        documentType: "",
+        documentNumber: ""
       },
       {
         invoiceId: "IN1718000000142017003",
@@ -134,7 +131,13 @@ export const CustomerData: Customer[] = [
         dueDate: "22/04/24",
         status: "Overdue by 158 days",
         lastReminder: "27/09/24",
-        customerName: ""
+        customerName: "",
+        invoiceAmount: "",
+        discount: "",
+        region: null,
+        division: "",
+        documentType: "",
+        documentNumber: ""
       },
     ],
   },

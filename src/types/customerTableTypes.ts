@@ -3,10 +3,10 @@ export interface Invoice {
   invoiceNumber: string;
   customerName: string;
   invoiceDate: string;
-  outstandingAmount: string;
+  outstandingAmount: number;
   dueDate: string;
   status: string | null;
-  lastReminder: string;
+  lastReminder: string | null;
   invoiceAmount: string;  
   discount: string;       
   region: string | null;  
@@ -27,7 +27,7 @@ export interface Customer {
   totalInvoices: number;
   outstandingAmount: string;
   overdueInvoices: number;
-  overdueAmount: string;
+  overdueAmount: number;
   creditDebitNote: string;
   invoices: Invoice[];
 }

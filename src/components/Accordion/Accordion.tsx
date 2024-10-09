@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Invoice } from "../../types/customerTableTypes";
+import { Customer, Invoice } from "../../types/customerTableTypes";
 import InvoicesDetails from "../InvoicesDetails/InvoicesDetails";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
@@ -12,7 +12,8 @@ interface AccordionCardProps {
   onCheckboxChange: (
     customerId: number,
     isChecked: boolean,
-    invoices: Invoice[]
+    invoices: Invoice[],
+    customer: Customer
   ) => void;
   onInvoiceCheckboxChange: (invoice: Invoice, isChecked: boolean) => void;
   children: React.ReactNode;

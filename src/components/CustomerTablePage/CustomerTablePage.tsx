@@ -1,275 +1,28 @@
-// import React, { useState } from "react";
-// import { CustomerData } from "../../constants";
-// import { Customer, Invoice } from "../../types/customerTableTypes";
-// import AccordionCard from "../Accordion/Accordion";
-// import CustomerDetails from "../CustomerDetails/CustomerDetails";
-
-// const CustomerTablePage: React.FC = () => {
-//   const [selectedCustomers, setSelectedCustomers] = useState<number[]>([]);
-//   const [selectedInvoices, setSelectedInvoices] = useState<Invoice[]>([]);
-
-//   const handleCheckboxChange = (
-//     customerId: number,
-//     isChecked: boolean,
-//     invoices: Invoice[]
-//   ) => {
-//     if (isChecked) {
-//       setSelectedCustomers((prev) => [...prev, customerId]);
-
-//       // Select all invoices for the customer
-//       setSelectedInvoices((prev) => [...prev, ...invoices]);
-//     } else {
-//       setSelectedCustomers((prev) => prev.filter((id) => id !== customerId));
-
-//       // Deselect all invoices for the customer
-//       setSelectedInvoices((prev) =>
-//         prev.filter(
-//           (invoice) =>
-//             !invoices.some((inv) => inv.invoiceId === invoice.invoiceId)
-//         )
-//       );
-//     }
-//   };
-
-//   const handleInvoiceCheckboxChange = (
-//     invoice: Invoice,
-//     isChecked: boolean
-//   ) => {
-//     setSelectedInvoices((prev) => {
-//       if (isChecked) {
-//         return [...prev, invoice];
-//       } else {
-//         return prev.filter((inv) => inv.invoiceId !== invoice.invoiceId);
-//       }
-//     });
-//   };
-
-//   console.log("selectedInvoices==>", selectedInvoices);
-
-//   return (
-//     <div>
-//       {CustomerData.map((customer: Customer) => (
-//         <AccordionCard
-//           key={customer.customerId}
-//           customerId={customer.customerId}
-//           invoices={customer.invoices}
-//           selectedInvoices={selectedInvoices}
-//           onCheckboxChange={handleCheckboxChange}
-//           onInvoiceCheckboxChange={handleInvoiceCheckboxChange}
-//         >
-//           <CustomerDetails
-//             customer={customer}
-//             isChecked={selectedCustomers.includes(customer.customerId)}
-//             onCheckboxChange={() =>
-//               handleCheckboxChange(
-//                 customer.customerId,
-//                 !selectedCustomers.includes(customer.customerId),
-//                 customer.invoices
-//               )
-//             }
-//           />
-//         </AccordionCard>
-//       ))}
-//     </div>
-//   );
-// };
-
-// export default CustomerTablePage;
-
-// import React, { useState } from "react";
-// import { CustomerData } from "../../constants";
-// import { Customer, Invoice } from "../../types/customerTableTypes";
-// import AccordionCard from "../Accordion/Accordion";
-// import CustomerDetails from "../CustomerDetails/CustomerDetails";
-
-// const CustomerTablePage: React.FC = () => {
-//   const [selectedCustomers, setSelectedCustomers] = useState<number[]>([]);
-//   const [selectedInvoices, setSelectedInvoices] = useState<Invoice[]>([]);
-
-//   const handleCheckboxChange = (
-//     customerId: number,
-//     isChecked: boolean,
-//     invoices: Invoice[]
-//   ) => {
-//     if (isChecked) {
-//       setSelectedCustomers((prev) => [...prev, customerId]);
-//       setSelectedInvoices((prev) => [...prev, ...invoices]);
-//     } else {
-//       setSelectedCustomers((prev) => prev.filter((id) => id !== customerId));
-//       setSelectedInvoices((prev) =>
-//         prev.filter(
-//           (invoice) =>
-//             !invoices.some((inv) => inv.invoiceId === invoice.invoiceId)
-//         )
-//       );
-//     }
-//   };
-
-//   const handleInvoiceCheckboxChange = (
-//     invoice: Invoice,
-//     isChecked: boolean
-//   ) => {
-//     setSelectedInvoices((prev) => {
-//       if (isChecked) {
-//         return [...prev, invoice];
-//       } else {
-//         return prev.filter((inv) => inv.invoiceId !== invoice.invoiceId);
-//       }
-//     });
-//   };
-
-//   const areAllInvoicesSelected = (invoices: Invoice[]) =>
-//     invoices.every((invoice) =>
-//       selectedInvoices.some((inv) => inv.invoiceId === invoice.invoiceId)
-//     );
-
-//   const isAnyInvoiceSelected = (invoices: Invoice[]) =>
-//     invoices.some((invoice) =>
-//       selectedInvoices.some((inv) => inv.invoiceId === invoice.invoiceId)
-//     );
-//   return (
-//     <div>
-//       {CustomerData.map((customer: Customer) => (
-//         <AccordionCard
-//           key={customer.customerId}
-//           customerId={customer.customerId}
-//           invoices={customer.invoices}
-//           selectedInvoices={selectedInvoices}
-//           onCheckboxChange={handleCheckboxChange}
-//           onInvoiceCheckboxChange={handleInvoiceCheckboxChange}
-//         >
-//           <CustomerDetails
-//             customer={customer}
-//             isChecked={selectedCustomers.includes(customer.customerId)}
-//             isPartiallyChecked={
-//               isAnyInvoiceSelected(customer.invoices) &&
-//               !areAllInvoicesSelected(customer.invoices)
-//             }
-//             onCheckboxChange={() =>
-//               handleCheckboxChange(
-//                 customer.customerId,
-//                 !selectedCustomers.includes(customer.customerId),
-//                 customer.invoices
-//               )
-//             }
-//           />
-//         </AccordionCard>
-//       ))}
-//     </div>
-//   );
-// };
-
-// export default CustomerTablePage;
-
-// import React, { useState } from "react";
-// import { CustomerData } from "../../constants";
-// import { Customer, Invoice } from "../../types/customerTableTypes";
-// import AccordionCard from "../Accordion/Accordion";
-// import CustomerDetails from "../CustomerDetails/CustomerDetails";
-
-// const CustomerTablePage: React.FC = () => {
-//   const [selectedCustomers, setSelectedCustomers] = useState<number[]>([]);
-//   const [selectedInvoices, setSelectedInvoices] = useState<Invoice[]>([]);
-
-//   const handleCheckboxChange = (
-//     customerId: number,
-//     isChecked: boolean,
-//     invoices: Invoice[]
-//   ) => {
-//     if (isChecked) {
-//       setSelectedCustomers((prev) => [...prev, customerId]);
-//       setSelectedInvoices((prev) => [...prev, ...invoices]);
-//     } else {
-//       setSelectedCustomers((prev) => prev.filter((id) => id !== customerId));
-//       setSelectedInvoices((prev) =>
-//         prev.filter(
-//           (invoice) =>
-//             !invoices.some((inv) => inv.invoiceId === invoice.invoiceId)
-//         )
-//       );
-//     }
-//   };
-
-//   const handleInvoiceCheckboxChange = (
-//     invoice: Invoice,
-//     isChecked: boolean
-//   ) => {
-//     setSelectedInvoices((prev) => {
-//       if (isChecked) {
-//         return [...prev, invoice];
-//       } else {
-//         return prev.filter((inv) => inv.invoiceId !== invoice.invoiceId);
-//       }
-//     });
-//   };
-
-//   // Helper functions to check invoice selection state
-//   const areAllInvoicesSelected = (invoices: Invoice[]) =>
-//     invoices.every((invoice) =>
-//       selectedInvoices.some((inv) => inv.invoiceId === invoice.invoiceId)
-//     );
-
-//   const isAnyInvoiceSelected = (invoices: Invoice[]) =>
-//     invoices.some((invoice) =>
-//       selectedInvoices.some((inv) => inv.invoiceId === invoice.invoiceId)
-//     );
-//   console.log("slectedInvoice=>", selectedInvoices);
-//   return (
-//     <div>
-//       {CustomerData.map((customer: Customer) => (
-//         <AccordionCard
-//           key={customer.customerId}
-//           customerId={customer.customerId}
-//           invoices={customer.invoices}
-//           selectedInvoices={selectedInvoices}
-//           onCheckboxChange={handleCheckboxChange}
-//           onInvoiceCheckboxChange={handleInvoiceCheckboxChange}
-//         >
-//           <CustomerDetails
-//             customer={customer}
-//             // Check if any invoice is selected for this customer
-//             isChecked={
-//               selectedCustomers.includes(customer.customerId) &&
-//               isAnyInvoiceSelected(customer.invoices)
-//             }
-//             isPartiallyChecked={
-//               isAnyInvoiceSelected(customer.invoices) &&
-//               !areAllInvoicesSelected(customer.invoices)
-//             }
-//             onCheckboxChange={() =>
-//               handleCheckboxChange(
-//                 customer.customerId,
-//                 !selectedCustomers.includes(customer.customerId),
-//                 customer.invoices
-//               )
-//             }
-//           />
-//         </AccordionCard>
-//       ))}
-//     </div>
-//   );
-// };
-
-// export default CustomerTablePage;
-
 import React, { useState } from "react";
 import { CustomerData } from "../../constants";
 import { Customer, Invoice } from "../../types/customerTableTypes";
 import AccordionCard from "../Accordion/Accordion";
 import CustomerDetails from "../CustomerDetails/CustomerDetails";
+import styles from "./CustomerTablePage.module.scss";
+import Modal from "../Modal/Modal";
+import { isInvoiceOverdue } from "../Helper/invoices";
 
 const CustomerTablePage: React.FC = () => {
   const [selectedCustomers, setSelectedCustomers] = useState<number[]>([]);
   const [selectedInvoices, setSelectedInvoices] = useState<Invoice[]>([]);
+  const [customerDetails, setCustomerDetails] = useState<Customer[]>([]);
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 
   const handleCheckboxChange = (
     customerId: number,
     isChecked: boolean,
-    invoices: Invoice[]
+    invoices: Invoice[],
+    customer: Customer
   ) => {
     if (isChecked) {
       setSelectedCustomers((prev) => [...prev, customerId]);
       setSelectedInvoices((prev) => [...prev, ...invoices]);
+      setCustomerDetails((prev) => [...prev, customer]);
     } else {
       setSelectedCustomers((prev) => prev.filter((id) => id !== customerId));
       setSelectedInvoices((prev) =>
@@ -278,6 +31,9 @@ const CustomerTablePage: React.FC = () => {
             !invoices.some((inv) => inv.invoiceId === invoice.invoiceId)
         )
       );
+      setCustomerDetails(
+        (prev) => prev.filter((cust) => cust.customerId !== customerId) // Remove customer from customerDetails
+      );
     }
   };
 
@@ -285,7 +41,8 @@ const CustomerTablePage: React.FC = () => {
     invoice: Invoice,
     isChecked: boolean,
     customerId: number,
-    invoices: Invoice[]
+    invoices: Invoice[],
+    customer: Customer
   ) => {
     setSelectedInvoices((prev) => {
       let newSelectedInvoices;
@@ -297,36 +54,78 @@ const CustomerTablePage: React.FC = () => {
         );
       }
 
-      // Check if all invoices for the customer are selected
-      const allInvoicesSelected = invoices.every((inv) =>
+      const someInvoicesSelected = invoices.some((inv) =>
         newSelectedInvoices.some((selInv) => selInv.invoiceId === inv.invoiceId)
       );
 
-      // Update the customer checkbox state accordingly
-      if (allInvoicesSelected) {
+      if (someInvoicesSelected && !selectedCustomers.includes(customerId)) {
         setSelectedCustomers((prev) => [...prev, customerId]);
-      } else {
-        // If not all invoices are selected, ensure the customer checkbox is not selected
+        setCustomerDetails((prev) => {
+          if (!prev.some((cust) => cust.customerId === customerId)) {
+            return [...prev, customer];
+          }
+          return prev;
+        });
+      }
+
+      if (!someInvoicesSelected) {
         setSelectedCustomers((prev) => prev.filter((id) => id !== customerId));
+        setCustomerDetails((prev) =>
+          prev.filter((cust) => cust.customerId !== customerId)
+        );
       }
 
       return newSelectedInvoices;
     });
   };
 
-  // Helper functions to check invoice selection state
-  const areAllInvoicesSelected = (invoices: Invoice[]) =>
-    invoices.every((invoice) =>
-      selectedInvoices.some((inv) => inv.invoiceId === invoice.invoiceId)
+  const getActionButtonTitle = () => {
+    if (selectedInvoices.length === 0) {
+      return "Request Payment / Send Reminder";
+    }
+
+    const hasOverdueInvoices = selectedInvoices.some((invoice) =>
+      isInvoiceOverdue(invoice.dueDate)
+    );
+    const hasUpcomingInvoices = selectedInvoices.some(
+      (invoice) => !isInvoiceOverdue(invoice.dueDate)
     );
 
-  const isAnyInvoiceSelected = (invoices: Invoice[]) =>
-    invoices.some((invoice) =>
-      selectedInvoices.some((inv) => inv.invoiceId === invoice.invoiceId)
-    );
-  console.log("selectedInvoices==>", selectedInvoices);
+    if (hasOverdueInvoices && hasUpcomingInvoices) {
+      return "Request Payment / Send Reminder";
+    } else if (hasOverdueInvoices) {
+      return "Request Payment";
+    } else {
+      return "Send Reminder";
+    }
+  };
+
+  const handleOpenModal = () => {
+    if (selectedInvoices.length > 0) {
+      setIsOpenModal(true);
+    }
+  };
+
+  const handleCloseIcon = () => {
+    setIsOpenModal(false);
+  };
+  console.log("selected invoices===>", selectedInvoices);
+  console.log("selected customers id===>", selectedCustomers);
+  console.log("customer details===>", customerDetails);
+
   return (
     <div>
+      {/* Action Button */}
+      <div
+        className={`${styles.actionButtonContainer} ${
+          selectedInvoices.length === 0 ? styles.disabled : ""
+        }`}
+        onClick={handleOpenModal}
+      >
+        {getActionButtonTitle()}
+      </div>
+
+      {/* Customer Data */}
       {CustomerData.map((customer: Customer) => (
         <AccordionCard
           key={customer.customerId}
@@ -339,51 +138,55 @@ const CustomerTablePage: React.FC = () => {
               invoice,
               isChecked,
               customer.customerId,
-              customer.invoices
+              customer.invoices,
+              customer
             )
           }
         >
-          {/* <CustomerDetails
-            customer={customer}
-            // Check if any invoice is selected for this customer
-            isChecked={
-              selectedCustomers.includes(customer.customerId) &&
-              isAnyInvoiceSelected(customer.invoices)
-            }
-            isPartiallyChecked={
-              isAnyInvoiceSelected(customer.invoices) &&
-              !areAllInvoicesSelected(customer.invoices)
-            }
-            onCheckboxChange={() =>
-              handleCheckboxChange(
-                customer.customerId,
-                !selectedCustomers.includes(customer.customerId),
-                customer.invoices
-              )
-            }
-          /> */}
           <CustomerDetails
             customer={customer}
             isChecked={
               selectedCustomers.includes(customer.customerId) &&
-              !isAnyInvoiceSelected(customer.invoices)
-                ? false
-                : selectedCustomers.includes(customer.customerId)
+              !customer.invoices.some(
+                (inv) =>
+                  !selectedInvoices.some(
+                    (selectedInv) => selectedInv.invoiceId === inv.invoiceId
+                  )
+              )
             }
             isPartiallyChecked={
-              isAnyInvoiceSelected(customer.invoices) &&
-              !areAllInvoicesSelected(customer.invoices)
+              customer.invoices.some((invoice) =>
+                selectedInvoices.some(
+                  (selectedInv) => selectedInv.invoiceId === invoice.invoiceId
+                )
+              ) &&
+              !customer.invoices.every((invoice) =>
+                selectedInvoices.some(
+                  (selectedInv) => selectedInv.invoiceId === invoice.invoiceId
+                )
+              )
             }
             onCheckboxChange={() =>
               handleCheckboxChange(
                 customer.customerId,
                 !selectedCustomers.includes(customer.customerId),
-                customer.invoices
+                customer.invoices,
+                customer
               )
             }
           />
         </AccordionCard>
       ))}
+
+      {/* Modal */}
+      {isOpenModal && (
+        <Modal
+          onClose={handleCloseIcon}
+          customers={customerDetails}
+          invoices={selectedInvoices}
+          actionButtonTitle={getActionButtonTitle()} // Pass the action button title
+        />
+      )}
     </div>
   );
 };

@@ -1,0 +1,92 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modalContent {
+  background-color: #fff;
+  padding: 20px 40px;
+  border-radius: 8px;
+  max-width: 600px;
+  width: 100%;
+  position: relative;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.closeIcon {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #6b6b6b;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+}
+
+.closeIcon:hover {
+  color: #ff0000;
+}
+
+.summaryContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.summaryItem {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.summaryLabel {
+  font-size: 12px;
+  color: #6b6b6b;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.summaryValue {
+  font-size: 24px;
+  font-weight: bold;
+  color: #2b2b2b;
+}
+
+.summaryValue:last-child {
+  color: #000;
+}
+.messageContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 15px;
+  background-color: #f9f9f9; 
+  border-radius: 5px; 
+  border: 1px solid #e0e0e0; 
+  color: black;
+}
+
+.messageTitle {
+  display: flex;
+  align-items: flex-start;
+  color: black;
+}
+.modalTitle{
+  color: black;
+}
+
+.tabContainer {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 20px;
+}
+

@@ -6,6 +6,7 @@ import CustomerDetails from "../CustomerDetails/CustomerDetails";
 import Pagination from "../Pagination/Pagination";
 import styles from "./CustomerTablePage.module.scss";
 import Modal from "../Modal/Modal";
+import Checkbox from "../Checkbox/Checkbox";
 import { isInvoiceOverdue } from "../Helper/invoices";
 
 const CustomerTablePage: React.FC = () => {
@@ -14,7 +15,30 @@ const CustomerTablePage: React.FC = () => {
   const [customerDetails, setCustomerDetails] = useState<Customer[]>([]);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [expandedCustomerId, setExpandedCustomerId] = useState<number | null>(
+    null
+  );
   const customersPerPage = 5;
+
+  const allCustomersSelected = selectedCustomers.length === CustomerData.length;
+  const isPartiallySelected =
+    selectedCustomers.length > 0 &&
+    selectedCustomers.length < CustomerData.length;
+
+  const handleSelectAllChange = () => {
+    if (allCustomersSelected) {
+      setSelectedCustomers([]);
+      setSelectedInvoices([]);
+      setCustomerDetails([]);
+    } else {
+      const allInvoices = CustomerData.flatMap((customer) => customer.invoices);
+      setSelectedCustomers(CustomerData.map((customer) => customer.customerId));
+      setSelectedInvoices(allInvoices);
+      setCustomerDetails(CustomerData);
+    }
+  };
+  console.log("selected customers details ==> ", customerDetails);
+  console.log("selected invoices ==> ", selectedInvoices);
 
   const handleCheckboxChange = (
     customerId: number,
@@ -119,15 +143,30 @@ const CustomerTablePage: React.FC = () => {
     return CustomerData.slice(indexOfFirstCustomer, indexOfLastCustomer);
   };
 
+  const toggleAccordion = (customerId: number) => {
+    setExpandedCustomerId((prev) => (prev === customerId ? null : customerId));
+  };
+
   return (
     <div>
-      <div
-        className={`${styles.actionButtonContainer} ${
-          selectedInvoices.length === 0 ? styles.disabled : ""
-        }`}
-        onClick={handleOpenModal}
-      >
-        {getActionButtonTitle()}
+      <div className={styles.headerContainer}>
+        <div className={styles.selectAllCheckbox}>
+          <Checkbox
+            isChecked={allCustomersSelected}
+            isPartiallyChecked={isPartiallySelected}
+            onChange={handleSelectAllChange}
+          />
+          <span>Select All</span>
+        </div>
+
+        <div
+          className={`${styles.actionButtonContainer} ${
+            selectedInvoices.length === 0 ? styles.disabled : ""
+          }`}
+          onClick={handleOpenModal}
+        >
+          {getActionButtonTitle()}
+        </div>
       </div>
 
       {paginateCustomers().map((customer: Customer) => (
@@ -146,6 +185,8 @@ const CustomerTablePage: React.FC = () => {
               customer
             )
           }
+          isExpanded={expandedCustomerId === customer.customerId}
+          onToggleExpansion={() => toggleAccordion(customer.customerId)}
         >
           <CustomerDetails
             customer={customer}
@@ -192,7 +233,7 @@ const CustomerTablePage: React.FC = () => {
           onClose={handleCloseIcon}
           customers={customerDetails}
           invoices={selectedInvoices}
-          actionButtonTitle={getActionButtonTitle()} // Pass the action button title
+          actionButtonTitle={getActionButtonTitle()}
         />
       )}
     </div>

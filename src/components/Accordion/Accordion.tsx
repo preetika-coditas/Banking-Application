@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Customer, Invoice } from "../../types/customerTableTypes";
 import InvoicesDetails from "../InvoicesDetails/InvoicesDetails";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -16,6 +16,8 @@ interface AccordionCardProps {
     customer: Customer
   ) => void;
   onInvoiceCheckboxChange: (invoice: Invoice, isChecked: boolean) => void;
+  onToggleExpansion: () => void;
+  isExpanded: boolean;
   children: React.ReactNode;
 }
 
@@ -24,23 +26,14 @@ const AccordionCard: React.FC<AccordionCardProps> = ({
   selectedInvoices,
   onInvoiceCheckboxChange,
   children,
+  isExpanded,
+  onToggleExpansion,
 }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  const toggleExpansion = () => setIsExpanded(!isExpanded);
-
-  const handleInvoiceCheckboxChange = (
-    invoice: Invoice,
-    isChecked: boolean
-  ) => {
-    onInvoiceCheckboxChange(invoice, isChecked);
-  };
-
   return (
     <div className={styles.accordionCard}>
       <div className={styles.subContainer}>
         {children}
-        <div className={styles.iconWrapper} onClick={toggleExpansion}>
+        <div className={styles.iconWrapper} onClick={onToggleExpansion}>
           <FontAwesomeIcon
             icon={faAngleDown}
             className={`${isExpanded ? styles.rotate : ""}`}
@@ -51,7 +44,7 @@ const AccordionCard: React.FC<AccordionCardProps> = ({
         <InvoicesDetails
           invoices={invoices}
           selectedInvoices={selectedInvoices}
-          onInvoiceCheckboxChange={handleInvoiceCheckboxChange}
+          onInvoiceCheckboxChange={onInvoiceCheckboxChange}
         />
       )}
     </div>

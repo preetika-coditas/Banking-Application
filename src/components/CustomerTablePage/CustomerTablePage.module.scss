@@ -1,3 +1,9 @@
+.headerContainer{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
 .actionButtonContainer {
   display: flex;
   justify-content: flex-end;
@@ -5,5 +11,13 @@
   cursor: pointer;
 }
 .modalContent {
-color: black;
+  color: black;
+}
+.selectAllCheckbox {
+  display: flex;
+  gap: .5rem;
+  align-items: center;
+  color: black;
+  font-weight: bold;
+  font-size: 12px;
 }

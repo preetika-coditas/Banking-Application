@@ -3,6 +3,7 @@ import { CustomerData } from "../../constants";
 import { Customer, Invoice } from "../../types/customerTableTypes";
 import AccordionCard from "../Accordion/Accordion";
 import CustomerDetails from "../CustomerDetails/CustomerDetails";
+import Pagination from "../Pagination/Pagination";
 import styles from "./CustomerTablePage.module.scss";
 import Modal from "../Modal/Modal";
 import { isInvoiceOverdue } from "../Helper/invoices";
@@ -12,6 +13,8 @@ const CustomerTablePage: React.FC = () => {
   const [selectedInvoices, setSelectedInvoices] = useState<Invoice[]>([]);
   const [customerDetails, setCustomerDetails] = useState<Customer[]>([]);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const customersPerPage = 5;
 
   const handleCheckboxChange = (
     customerId: number,
@@ -31,8 +34,8 @@ const CustomerTablePage: React.FC = () => {
             !invoices.some((inv) => inv.invoiceId === invoice.invoiceId)
         )
       );
-      setCustomerDetails(
-        (prev) => prev.filter((cust) => cust.customerId !== customerId) // Remove customer from customerDetails
+      setCustomerDetails((prev) =>
+        prev.filter((cust) => cust.customerId !== customerId)
       );
     }
   };
@@ -109,13 +112,15 @@ const CustomerTablePage: React.FC = () => {
   const handleCloseIcon = () => {
     setIsOpenModal(false);
   };
-  console.log("selected invoices===>", selectedInvoices);
-  console.log("selected customers id===>", selectedCustomers);
-  console.log("customer details===>", customerDetails);
+
+  const paginateCustomers = () => {
+    const indexOfLastCustomer = currentPage * customersPerPage;
+    const indexOfFirstCustomer = indexOfLastCustomer - customersPerPage;
+    return CustomerData.slice(indexOfFirstCustomer, indexOfLastCustomer);
+  };
 
   return (
     <div>
-      {/* Action Button */}
       <div
         className={`${styles.actionButtonContainer} ${
           selectedInvoices.length === 0 ? styles.disabled : ""
@@ -125,8 +130,7 @@ const CustomerTablePage: React.FC = () => {
         {getActionButtonTitle()}
       </div>
 
-      {/* Customer Data */}
-      {CustomerData.map((customer: Customer) => (
+      {paginateCustomers().map((customer: Customer) => (
         <AccordionCard
           key={customer.customerId}
           customerId={customer.customerId}
@@ -177,8 +181,12 @@ const CustomerTablePage: React.FC = () => {
           />
         </AccordionCard>
       ))}
-
-      {/* Modal */}
+      <Pagination
+        currentPage={currentPage}
+        totalItems={CustomerData.length}
+        itemsPerPage={customersPerPage}
+        onPageChange={(pageNumber) => setCurrentPage(pageNumber)}
+      />
       {isOpenModal && (
         <Modal
           onClose={handleCloseIcon}

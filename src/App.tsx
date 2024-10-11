@@ -1,8 +1,12 @@
 import "./App.css";
-import Dashboard from "./pages/Dashboard/Dashboard";
+import CustomerTablePage from "./pages/CustomerTablePage/CustomerTablePage";
 
 function App() {
-  return <Dashboard />;
+  return (
+    <div className="dashboard-container">
+      <CustomerTablePage />
+    </div>
+  );
 }
 
 export default App;

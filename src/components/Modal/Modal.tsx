@@ -150,8 +150,8 @@ const Modal: React.FC<ModalProps> = ({
 
         <div className={styles.tabContent}>
           {activeTab === "Request Payment" && overdueInvoices.length > 0 && (
-            <div>
-              <h3 className={styles.modalTitle}>Request Payment</h3>
+            <div className={styles.invoiceDetailsContainer}>
+              <div className={styles.invoiceTypeTitle}>Request Payment</div>
               <Summary
                 invoiceCount={overdueInvoices.length}
                 customerCount={uniqueOverdueCustomers.size}
@@ -164,8 +164,8 @@ const Modal: React.FC<ModalProps> = ({
           )}
 
           {activeTab === "Send Reminder" && upcomingInvoices.length > 0 && (
-            <div>
-              <h3 className={styles.modalTitle}>Send Reminder</h3>
+            <div className={styles.invoiceDetailsContainer}>
+              <div className={styles.invoiceTypeTitle}>Send Reminder</div>
               <Summary
                 invoiceCount={upcomingInvoices.length}
                 customerCount={uniqueUpcomingCustomers.size}
@@ -177,9 +177,14 @@ const Modal: React.FC<ModalProps> = ({
             </div>
           )}
         </div>
-        <button onClick={handleRequestPayment}>
-          Request Payment Via email
-        </button>
+        <div className={styles.sendRequestButtonContainer}>
+          <div
+            className={styles.sendRequestButton}
+            onClick={handleRequestPayment}
+          >
+            <div> Request Payment Via email</div>
+          </div>
+        </div>
       </div>
     </div>
   );

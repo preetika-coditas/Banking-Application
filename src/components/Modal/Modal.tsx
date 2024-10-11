@@ -13,6 +13,7 @@ const Modal: React.FC<ModalProps> = ({
   customers,
   onClose,
   actionButtonTitle,
+  onRequestPayment,
 }) => {
   const [activeTab, setActiveTab] = useState<
     "Request Payment" | "Send Reminder"
@@ -26,6 +27,24 @@ const Modal: React.FC<ModalProps> = ({
       setActiveTab("Request Payment");
     }
   }, [actionButtonTitle]);
+
+  const handleRequestPayment = () => {
+    const paymentData = customers.map((customer) => ({
+      customerId: customer.customerId,
+      invoiceIds: invoices
+        .filter(
+          (invoice) =>
+            invoice.customerName.trim().toLowerCase() ===
+            customer.name.trim().toLowerCase()
+        )
+        .map((invoice) => invoice.invoiceId),
+    }));
+
+    console.log("Request Payment data: ", paymentData);
+
+    onRequestPayment();
+    onClose();
+  };
 
   const overdueInvoices = invoices.filter((invoice) =>
     isInvoiceOverdue(invoice.dueDate)
@@ -158,6 +177,9 @@ const Modal: React.FC<ModalProps> = ({
             </div>
           )}
         </div>
+        <button onClick={handleRequestPayment}>
+          Request Payment Via email
+        </button>
       </div>
     </div>
   );

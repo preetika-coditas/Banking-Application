@@ -25,6 +25,13 @@ const CustomerTablePage: React.FC = () => {
     selectedCustomers.length > 0 &&
     selectedCustomers.length < CustomerData.length;
 
+  const handleRequestPayment = () => {
+    setSelectedCustomers([]);
+    setSelectedInvoices([]);
+    setCustomerDetails([]);
+    setIsOpenModal(false);
+  };
+
   const handleSelectAllChange = () => {
     if (allCustomersSelected) {
       setSelectedCustomers([]);
@@ -240,6 +247,7 @@ const CustomerTablePage: React.FC = () => {
           customers={customerDetails}
           invoices={selectedInvoices}
           actionButtonTitle={getActionButtonTitle()}
+          onRequestPayment={handleRequestPayment}
         />
       )}
     </div>

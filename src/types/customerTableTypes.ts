@@ -31,3 +31,10 @@ export interface Customer {
   creditDebitNote: string;
   invoices: Invoice[];
 }
+
+export interface PaymentEntry {
+  customerId: Customer; 
+  invoiceIds: string[]; 
+}
+
+export type PaymentData = PaymentEntry[];

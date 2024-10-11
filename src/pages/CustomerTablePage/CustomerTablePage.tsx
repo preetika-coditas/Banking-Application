@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { CustomerData } from "../../constants/customersData";
-import { Customer, Invoice } from "../../types/customerTableTypes";
+import {
+  Customer,
+  Invoice,
+  PaymentEntry,
+} from "../../types/customerTableTypes";
 import AccordionCard from "../../components/Accordion/Accordion";
 import CustomerDetails from "../../components/CustomerDetails/CustomerDetails";
 import Pagination from "../../components/Pagination/Pagination";
@@ -18,6 +22,7 @@ const CustomerTablePage: React.FC = () => {
   const [expandedCustomerId, setExpandedCustomerId] = useState<number | null>(
     null
   );
+  const [paymentData, setPaymentData] = useState<PaymentEntry[]>([]);
   const customersPerPage = 5;
 
   const allCustomersSelected = selectedCustomers.length === CustomerData.length;
@@ -26,12 +31,15 @@ const CustomerTablePage: React.FC = () => {
     selectedCustomers.length < CustomerData.length;
 
   const handleRequestPayment = () => {
-    setSelectedCustomers([]);
-    setSelectedInvoices([]);
-    setCustomerDetails([]);
     setIsOpenModal(false);
   };
 
+  console.log("selected invoice after sending rrequest=>", selectedInvoices);
+  const handlePaymentDataSend = (data: any) => {
+    console.log("Received payment data:", data);
+    setPaymentData(data);
+  };
+  console.log("setPaymentData", paymentData);
   const handleSelectAllChange = () => {
     if (allCustomersSelected) {
       setSelectedCustomers([]);
@@ -160,6 +168,43 @@ const CustomerTablePage: React.FC = () => {
     console.log("selected invoices ==> ", selectedInvoices);
   }, [selectedInvoices]);
 
+  useEffect(() => {
+    if (paymentData.length > 0) {
+      // Create a new set of selected invoices after filtering out the invoiceIds present in paymentData
+      const newSelectedInvoices = selectedInvoices.filter(
+        (selectedInvoice) =>
+          !paymentData.some((paymentEntry) =>
+            paymentEntry.invoiceIds.includes(selectedInvoice.invoiceId)
+          )
+      );
+
+      // Update selectedInvoices state
+      setSelectedInvoices(newSelectedInvoices);
+
+      // Check for customers where all invoices are unchecked and remove them from selectedCustomers and customerDetails
+      const newSelectedCustomers = selectedCustomers.filter((customerId) =>
+        paymentData.every(
+          (paymentEntry) =>
+            paymentEntry.customerId.customerId !== customerId ||
+            paymentEntry.customerId.invoices.some((invoice) =>
+              newSelectedInvoices.some(
+                (selectedInvoice) =>
+                  selectedInvoice.invoiceId === invoice.invoiceId
+              )
+            )
+        )
+      );
+
+      // Update selectedCustomers and customerDetails state
+      setSelectedCustomers(newSelectedCustomers);
+      setCustomerDetails((prevDetails) =>
+        prevDetails.filter((customer) =>
+          newSelectedCustomers.includes(customer.customerId)
+        )
+      );
+    }
+  }, [paymentData]);
+
   return (
     <div>
       <div className={styles.headerContainer}>
@@ -243,11 +288,12 @@ const CustomerTablePage: React.FC = () => {
       />
       {isOpenModal && (
         <Modal
-          onClose={handleCloseIcon}
-          customers={customerDetails}
           invoices={selectedInvoices}
+          customers={customerDetails}
+          onClose={handleCloseIcon}
           actionButtonTitle={getActionButtonTitle()}
           onRequestPayment={handleRequestPayment}
+          onPaymentDataSend={handlePaymentDataSend}
         />
       )}
     </div>

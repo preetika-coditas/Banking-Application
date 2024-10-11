@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styles from "./Modal.module.scss";
-import { Customer } from "../../types/customerTableTypes";
+import { Customer, Invoice } from "../../types/customerTableTypes";
 import {
   isInvoiceOverdue,
   calculateTotalOverdueAmount,
@@ -14,6 +14,7 @@ const Modal: React.FC<ModalProps> = ({
   onClose,
   actionButtonTitle,
   onRequestPayment,
+  onPaymentDataSend,
 }) => {
   const [activeTab, setActiveTab] = useState<
     "Request Payment" | "Send Reminder"
@@ -29,9 +30,17 @@ const Modal: React.FC<ModalProps> = ({
   }, [actionButtonTitle]);
 
   const handleRequestPayment = () => {
+    let filteredInvoices: Invoice[] = [];
+
+    if (activeTab === "Request Payment") {
+      filteredInvoices = overdueInvoices;
+    } else if (activeTab === "Send Reminder") {
+      filteredInvoices = upcomingInvoices;
+    }
+
     const paymentData = customers.map((customer) => ({
-      customerId: customer.customerId,
-      invoiceIds: invoices
+      customerId: customer,
+      invoiceIds: filteredInvoices
         .filter(
           (invoice) =>
             invoice.customerName.trim().toLowerCase() ===
@@ -40,7 +49,15 @@ const Modal: React.FC<ModalProps> = ({
         .map((invoice) => invoice.invoiceId),
     }));
 
-    console.log("Request Payment data: ", paymentData);
+    console.log(
+      "paymentData",
+      activeTab === "Request Payment"
+        ? "Request Payment data: "
+        : "Send Reminder data: ",
+      paymentData
+    );
+
+    onPaymentDataSend(paymentData);
 
     onRequestPayment();
     onClose();
@@ -52,7 +69,8 @@ const Modal: React.FC<ModalProps> = ({
   const upcomingInvoices = invoices.filter(
     (invoice) => !isInvoiceOverdue(invoice.dueDate)
   );
-
+  console.log("overdueInvoices => ", overdueInvoices);
+  console.log("upcomingInvoices => ", upcomingInvoices);
   const handleTabChange = (tab: "Request Payment" | "Send Reminder") => {
     setActiveTab(tab);
   };
@@ -170,7 +188,11 @@ const Modal: React.FC<ModalProps> = ({
             className={styles.sendRequestButton}
             onClick={handleRequestPayment}
           >
-            <div> Request Payment Via email</div>
+            <div>
+              {activeTab === "Request Payment"
+                ? "Request Payment via email"
+                : "Send Reminder via email"}
+            </div>
           </div>
         </div>
       </div>

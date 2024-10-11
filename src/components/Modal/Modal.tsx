@@ -93,9 +93,9 @@ const Modal: React.FC<ModalProps> = ({
     (item) => item.name
   );
 
-  let overdueCustomerName = "";
-
   const overdueCustomers = () => {
+    let overdueCustomerName = "";
+
     if (overdueCustomerNameArray.length > 1) {
       return (overdueCustomerName = "Customers");
     } else {
@@ -107,9 +107,9 @@ const Modal: React.FC<ModalProps> = ({
     (item) => item.name
   );
 
-  let upcomingCustomerName = "";
-
   const upcomingCustomers = () => {
+    let upcomingCustomerName = "";
+
     if (upcomingCustomerNameArray.length > 1) {
       console.log("more", overdueCustomerNameArray);
       return (upcomingCustomerName = "Customers");

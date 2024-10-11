@@ -1,5 +1,5 @@
 import CustomerTablePage from "../CustomerTablePage/CustomerTablePage";
-import styles from "./dashboard.module.scss";
+import styles from "./Dashboard.module.scss";
 
 const Dashboard = () => {
   return (

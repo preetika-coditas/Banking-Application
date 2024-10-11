@@ -1,40 +1,32 @@
 import React, { useState, useEffect } from "react";
 import styles from "./Modal.module.scss";
-import { Customer, Invoice } from "../../types/customerTableTypes";
+import { Customer } from "../../types/customerTableTypes";
 import {
   isInvoiceOverdue,
   calculateTotalOverdueAmount,
 } from "../Helper/invoices";
 import { Summary } from "./Summary";
-
-interface ModalProps {
-  invoices: Invoice[];
-  customers: Customer[];
-  onClose: () => void;
-  actionButtonTitle: string; // Added prop to determine the action button title
-}
+import { ModalProps } from "../../types/modalPropsTypes";
 
 const Modal: React.FC<ModalProps> = ({
   invoices,
   customers,
   onClose,
-  actionButtonTitle, // Destructure the prop
+  actionButtonTitle,
 }) => {
   const [activeTab, setActiveTab] = useState<
     "Request Payment" | "Send Reminder"
   >("Request Payment");
 
   useEffect(() => {
-    // Set the active tab based on the actionButtonTitle
     if (actionButtonTitle.includes("Send Reminder")) {
       setActiveTab("Send Reminder");
     }
     if (actionButtonTitle.includes("Request Payment")) {
       setActiveTab("Request Payment");
     }
-  }, [actionButtonTitle]); // Run effect when actionButtonTitle changes
+  }, [actionButtonTitle]);
 
-  // Separate invoices based on dueDate
   const overdueInvoices = invoices.filter((invoice) =>
     isInvoiceOverdue(invoice.dueDate)
   );
@@ -52,15 +44,12 @@ const Modal: React.FC<ModalProps> = ({
 
   const uniqueUpcomingCustomers = new Set<Customer>();
 
-  // Iterate over each upcoming invoice
   upcomingInvoices.forEach((invoice) => {
-    // Find the corresponding customer based on the invoice's customerName
     const matchingCustomer = customers.find(
       (customer) =>
         customer.name.toLowerCase() === invoice.customerName.toLowerCase() // Handle case differences
     );
 
-    // Add to the Set if a match is found
     if (matchingCustomer) {
       uniqueUpcomingCustomers.add(matchingCustomer);
     }
@@ -70,15 +59,12 @@ const Modal: React.FC<ModalProps> = ({
 
   const uniqueOverdueCustomers = new Set<Customer>();
 
-  // Iterate over each overdue invoice
   overdueInvoices.forEach((invoice) => {
-    // Find the corresponding customer based on the invoice's customerName
     const matchingCustomer = customers.find(
       (customer) =>
-        customer.name.toLowerCase() === invoice.customerName.toLowerCase() // Handle case differences
+        customer.name.toLowerCase() === invoice.customerName.toLowerCase()
     );
 
-    // Add to the Set if a match is found
     if (matchingCustomer) {
       uniqueOverdueCustomers.add(matchingCustomer);
     }
@@ -144,7 +130,6 @@ const Modal: React.FC<ModalProps> = ({
         )}
 
         <div className={styles.tabContent}>
-          {/* Request Payment Tab Content */}
           {activeTab === "Request Payment" && overdueInvoices.length > 0 && (
             <div>
               <h3 className={styles.modalTitle}>Request Payment</h3>
@@ -159,7 +144,6 @@ const Modal: React.FC<ModalProps> = ({
             </div>
           )}
 
-          {/* Send Reminder Tab Content */}
           {activeTab === "Send Reminder" && upcomingInvoices.length > 0 && (
             <div>
               <h3 className={styles.modalTitle}>Send Reminder</h3>

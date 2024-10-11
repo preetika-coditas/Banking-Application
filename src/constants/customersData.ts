@@ -1,4 +1,4 @@
-import { Customer } from "./types/customerTableTypes";
+import { Customer } from "../types/customerTableTypes";
 
 export const CustomerData: Customer[] = [
   {

@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import { CustomerData } from "../../constants";
+import React, { useEffect, useState } from "react";
+import { CustomerData } from "../../constants/customersData";
 import { Customer, Invoice } from "../../types/customerTableTypes";
-import AccordionCard from "../Accordion/Accordion";
-import CustomerDetails from "../CustomerDetails/CustomerDetails";
-import Pagination from "../Pagination/Pagination";
+import AccordionCard from "../../components/Accordion/Accordion";
+import CustomerDetails from "../../components/CustomerDetails/CustomerDetails";
+import Pagination from "../../components/Pagination/Pagination";
 import styles from "./CustomerTablePage.module.scss";
-import Modal from "../Modal/Modal";
-import Checkbox from "../Checkbox/Checkbox";
-import { isInvoiceOverdue } from "../Helper/invoices";
+import Modal from "../../components/Modal/Modal";
+import Checkbox from "../../components/Checkbox/Checkbox";
+import { isInvoiceOverdue } from "../../components/Helper/invoices";
 
 const CustomerTablePage: React.FC = () => {
   const [selectedCustomers, setSelectedCustomers] = useState<number[]>([]);
@@ -37,8 +37,6 @@ const CustomerTablePage: React.FC = () => {
       setCustomerDetails(CustomerData);
     }
   };
-  console.log("selected customers details ==> ", customerDetails);
-  console.log("selected invoices ==> ", selectedInvoices);
 
   const handleCheckboxChange = (
     customerId: number,
@@ -146,6 +144,14 @@ const CustomerTablePage: React.FC = () => {
   const toggleAccordion = (customerId: number) => {
     setExpandedCustomerId((prev) => (prev === customerId ? null : customerId));
   };
+
+  useEffect(() => {
+    console.log("selected customers details ==> ", customerDetails);
+  }, [customerDetails]);
+
+  useEffect(() => {
+    console.log("selected invoices ==> ", selectedInvoices);
+  }, [selectedInvoices]);
 
   return (
     <div>

@@ -1,4 +1,4 @@
-import CustomerTablePage from "../../components/CustomerTablePage/CustomerTablePage";
+import CustomerTablePage from "../CustomerTablePage/CustomerTablePage";
 import styles from "./dashboard.module.scss";
 
 const Dashboard = () => {

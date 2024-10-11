@@ -1,25 +1,9 @@
 import React from "react";
-import { Customer, Invoice } from "../../types/customerTableTypes";
 import InvoicesDetails from "../InvoicesDetails/InvoicesDetails";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import styles from "./Accordion.module.scss";
-
-interface AccordionCardProps {
-  customerId: number;
-  invoices: Invoice[];
-  selectedInvoices: Invoice[];
-  onCheckboxChange: (
-    customerId: number,
-    isChecked: boolean,
-    invoices: Invoice[],
-    customer: Customer
-  ) => void;
-  onInvoiceCheckboxChange: (invoice: Invoice, isChecked: boolean) => void;
-  onToggleExpansion: () => void;
-  isExpanded: boolean;
-  children: React.ReactNode;
-}
+import { AccordionCardProps } from "../../types/accordionCardPropsTypes";
 
 const AccordionCard: React.FC<AccordionCardProps> = ({
   invoices,

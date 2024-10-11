@@ -57,10 +57,6 @@ const Modal: React.FC<ModalProps> = ({
     setActiveTab(tab);
   };
 
-  console.log("overdueInvoices==>", overdueInvoices);
-  console.log("upcomingInvoices==>", upcomingInvoices);
-  console.log("customers==>", customers);
-
   const uniqueUpcomingCustomers = new Set<Customer>();
 
   upcomingInvoices.forEach((invoice) => {
@@ -73,8 +69,6 @@ const Modal: React.FC<ModalProps> = ({
       uniqueUpcomingCustomers.add(matchingCustomer);
     }
   });
-
-  console.log("uniqueUpcomingCustomers", Array.from(uniqueUpcomingCustomers));
 
   const uniqueOverdueCustomers = new Set<Customer>();
 
@@ -94,12 +88,10 @@ const Modal: React.FC<ModalProps> = ({
   );
 
   const overdueCustomers = () => {
-    let overdueCustomerName = "";
-
     if (overdueCustomerNameArray.length > 1) {
-      return (overdueCustomerName = "Customers");
+      return "Customers";
     } else {
-      return (overdueCustomerName = overdueCustomerNameArray[0]);
+      return overdueCustomerNameArray[0];
     }
   };
 
@@ -108,20 +100,12 @@ const Modal: React.FC<ModalProps> = ({
   );
 
   const upcomingCustomers = () => {
-    let upcomingCustomerName = "";
-
     if (upcomingCustomerNameArray.length > 1) {
-      console.log("more", overdueCustomerNameArray);
-      return (upcomingCustomerName = "Customers");
+      return "Customers";
     } else {
-      console.log("less", overdueCustomerNameArray);
-      return (upcomingCustomerName = upcomingCustomerNameArray[0]);
+      return upcomingCustomerNameArray[0];
     }
   };
-
-  console.log("uniqueOverdueCustomers==>", Array.from(uniqueOverdueCustomers));
-  console.log("overdueCustomerNameArray==>", overdueCustomerNameArray);
-  console.log("upcomingCustomerNameArray==>", upcomingCustomerNameArray);
 
   return (
     <div className={styles.modalOverlay} onClick={onClose}>

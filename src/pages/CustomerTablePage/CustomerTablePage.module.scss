@@ -9,6 +9,11 @@
   justify-content: flex-end;
   color: #9c1919;
   cursor: pointer;
+  &.disabled {
+    color: #6b6b6b; 
+    cursor: not-allowed;
+    font-weight: 700;
+  }
 }
 .modalContent {
   color: black;

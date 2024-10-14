@@ -1,45 +1,53 @@
-  .tableContainer {
-    border-radius: 1rem;
-    padding: 10px;
-    width: 100%;
-    margin: 20px 0;
-    font-size: 12px;
-  }
-  
-  .accordionContent {
-    margin-top: 10px;
-  }
+.tableContainer {
+  width: 100%;
+  margin: 20px 0;
+  font-size: 12px;
+  background-color: white;
+}
 
-  .invoicesTitle {
-    color: black;
-    padding-right: 10px;
-  }
+.accordionContent {
+  margin-top: 10px;
+}
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    th {
-      font-weight: normal; 
-    }
-  }
-  
-  th,
-  td {
-    padding: 10px;
-    text-align: left;
-  }
-  
-  thead {
-    background-color: #f5f5f5; 
-  }
-  
-  tbody tr:hover {
-    background-color: #f0f0f0; 
-  }
-  
-  input[type="checkbox"] {
-    cursor: pointer; 
-  }
+.invoicesTitle {
+  color: black;
+  padding-right: 10px;
+}
 
+table {
+  width: 100%;
+  border-collapse: collapse;
+  th {
+    font-weight: normal;
+  }
+}
 
-  
+th,
+td {
+  padding: 10px;
+  text-align: left;
+}
+
+thead {
+  background-color: #a9a9a93d;
+}
+
+tbody tr:hover {
+  background-color: #f0f0f0;
+}
+
+input[type="checkbox"] {
+  cursor: pointer;
+}
+
+.statusOverdue,
+.dueDateOverdue {
+  color: red;
+  font-weight: 500;
+}
+
+.statusUpcoming,
+.dueDateUpcoming {
+  color: green;
+  font-weight: 500;
+}

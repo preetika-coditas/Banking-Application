@@ -4,6 +4,7 @@ import Checkbox from "../Checkbox/Checkbox";
 import styles from "./InvoicesDetails.module.scss";
 import { InvoicesDetailsProps } from "../../types/invoiceDetailsPropsTypes";
 import { invoiceDetails } from "../../constants/invoiceDetailsMapping";
+import { getInvoiceStatus, isInvoiceOverdue } from "../Helper/invoices"; // Import new functions
 
 const InvoicesDetails: React.FC<InvoicesDetailsProps> = ({
   invoices,
@@ -23,6 +24,29 @@ const InvoicesDetails: React.FC<InvoicesDetailsProps> = ({
       const documentNumber = row.documentNumber || "N/A";
       const initials = documentType.substring(0, 2).toUpperCase();
       return `${initials} - ${documentNumber}`;
+    }
+
+    if (key === "status") {
+      const status = getInvoiceStatus(row.dueDate);
+      const isOverdue = isInvoiceOverdue(row.dueDate);
+      return (
+        <span
+          className={isOverdue ? styles.statusOverdue : styles.statusUpcoming}
+        >
+          {status}
+        </span>
+      );
+    }
+
+    if (key === "dueDate") {
+      const isOverdue = isInvoiceOverdue(row.dueDate);
+      return (
+        <span
+          className={isOverdue ? styles.dueDateOverdue : styles.dueDateUpcoming}
+        >
+          {row.dueDate}
+        </span>
+      );
     }
 
     const value = row[key];

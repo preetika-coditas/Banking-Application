@@ -11,7 +11,7 @@ const CustomerDetails: React.FC<CustomerDetailsProps> = ({
   onCheckboxChange,
 }) => {
   return (
-    <div className={styles.DetailsWrapper}>
+    <>
       <Checkbox
         isChecked={isChecked}
         isPartiallyChecked={isPartiallyChecked}
@@ -35,7 +35,7 @@ const CustomerDetails: React.FC<CustomerDetailsProps> = ({
           ))}
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -132,7 +132,6 @@ const Modal: React.FC<ModalProps> = ({
           &times;
         </span>
 
-        {/* Tabs */}
         {overdueInvoices.length > 0 && upcomingInvoices.length > 0 && (
           <div className={styles.tabContainer}>
             <div

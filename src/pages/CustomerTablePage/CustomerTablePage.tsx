@@ -22,7 +22,12 @@ const CustomerTablePage: React.FC = () => {
   const [expandedCustomerId, setExpandedCustomerId] = useState<number | null>(
     null
   );
-  const [paymentData, setPaymentData] = useState<PaymentEntry[]>([]);
+  const [requestPaymentData, setRequestPaymentData] = useState<PaymentEntry[]>(
+    []
+  );
+  const [sendReminderPaymentData, setSendReminderPaymentData] = useState<
+    PaymentEntry[]
+  >([]);
   const customersPerPage = 5;
 
   const allCustomersSelected = selectedCustomers.length === CustomerData.length;
@@ -31,11 +36,23 @@ const CustomerTablePage: React.FC = () => {
     selectedCustomers.length < CustomerData.length;
 
   const handleRequestPayment = () => {
-    setIsOpenModal(false);
+    // setIsOpenModal(false);
   };
 
-  const handlePaymentDataSend = (data: any) => {
-    setPaymentData(data);
+  const handlePaymentDataSend = (
+    paymentRequestFilteredInvoice: PaymentEntry[],
+    sendReminderFilteredinvoice: PaymentEntry[]
+  ) => {
+    setRequestPaymentData(paymentRequestFilteredInvoice);
+    setSendReminderPaymentData(sendReminderFilteredinvoice);
+    console.log(
+      "paymentRequestFilteredInvoice from customer page",
+      paymentRequestFilteredInvoice
+    );
+    console.log(
+      "sendReminderFilteredinvoice from customer page",
+      sendReminderFilteredinvoice
+    );
   };
   const handleSelectAllChange = () => {
     if (allCustomersSelected) {
@@ -166,18 +183,23 @@ const CustomerTablePage: React.FC = () => {
   }, [selectedInvoices]);
 
   useEffect(() => {
-    if (paymentData.length > 0) {
+    if (requestPaymentData.length > 0 || sendReminderPaymentData.length > 0) {
+      const combinedPaymentData = [
+        ...requestPaymentData,
+        ...sendReminderPaymentData,
+      ];
+
+      // Unchecking invoices
       const newSelectedInvoices = selectedInvoices.filter(
         (selectedInvoice) =>
-          !paymentData.some((paymentEntry) =>
+          !combinedPaymentData.some((paymentEntry) =>
             paymentEntry.invoiceIds.includes(selectedInvoice.invoiceId)
           )
       );
 
-      setSelectedInvoices(newSelectedInvoices);
-
+      // Updating selected customers
       const newSelectedCustomers = selectedCustomers.filter((customerId) =>
-        paymentData.every(
+        combinedPaymentData.every(
           (paymentEntry) =>
             paymentEntry.customerId.customerId !== customerId ||
             paymentEntry.customerId.invoices.some((invoice) =>
@@ -189,6 +211,8 @@ const CustomerTablePage: React.FC = () => {
         )
       );
 
+      // Updating customer details based on filtered customers
+      setSelectedInvoices(newSelectedInvoices);
       setSelectedCustomers(newSelectedCustomers);
       setCustomerDetails((prevDetails) =>
         prevDetails.filter((customer) =>
@@ -196,7 +220,7 @@ const CustomerTablePage: React.FC = () => {
         )
       );
     }
-  }, [paymentData]);
+  }, [requestPaymentData, sendReminderPaymentData]);
 
   return (
     <div>

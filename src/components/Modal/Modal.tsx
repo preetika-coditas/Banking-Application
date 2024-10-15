@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from "react";
 import styles from "./Modal.module.scss";
-import { Customer, Invoice } from "../../types/customerTableTypes";
+import { Summary } from "./Summary";
+import { ModalProps } from "../../types/modalPropsTypes";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
+import { TabConfig } from "../../constants/tabConfig";
+import {
+  Customer,
+  Invoice,
+  PaymentEntry,
+} from "../../types/customerTableTypes";
 import {
   isInvoiceOverdue,
   calculateTotalOverdueAmount,
 } from "../Helper/invoices";
-import { Summary } from "./Summary";
-import { ModalProps } from "../../types/modalPropsTypes";
 
 const Modal: React.FC<ModalProps> = ({
   invoices,
@@ -16,26 +23,27 @@ const Modal: React.FC<ModalProps> = ({
   onRequestPayment,
   onPaymentDataSend,
 }) => {
-  const [activeTab, setActiveTab] = useState<
-    "Request Payment" | "Send Reminder"
-  >("Request Payment");
-
-  useEffect(() => {
-    if (actionButtonTitle.includes("Send Reminder")) {
-      setActiveTab("Send Reminder");
-    }
-    if (actionButtonTitle.includes("Request Payment")) {
-      setActiveTab("Request Payment");
-    }
-  }, [actionButtonTitle]);
+  const [activeTab, setActiveTab] = useState(TabConfig.REQUEST_PAYMENT);
+  const [renderButtonContent, setRenderButtonContent] = useState<
+    Record<string, "button" | "note">
+  >({
+    [TabConfig.REQUEST_PAYMENT]: "button",
+    [TabConfig.SEND_REMINDER]: "button",
+  });
+  const [paymentRequestFilteredInvoice, setPaymentRequestFilteredInvoice] =
+    useState<PaymentEntry[]>([]);
+  const [sendReminderFilteredinvoice, setSendReminderFilteredinvoice] =
+    useState<PaymentEntry[]>([]);
 
   const handleRequestPayment = () => {
     let filteredInvoices: Invoice[] = [];
 
     if (activeTab === "Request Payment") {
       filteredInvoices = overdueInvoices;
-    } else if (activeTab === "Send Reminder") {
-      filteredInvoices = upcomingInvoices;
+      setRenderButtonContent((prev) => ({
+        ...prev,
+        [TabConfig.REQUEST_PAYMENT]: "note",
+      }));
     }
 
     const paymentData = customers.map((customer) => ({
@@ -48,7 +56,6 @@ const Modal: React.FC<ModalProps> = ({
         )
         .map((invoice) => invoice.invoiceId),
     }));
-
     console.log(
       "paymentData",
       activeTab === "Request Payment"
@@ -56,11 +63,48 @@ const Modal: React.FC<ModalProps> = ({
         : "Send Reminder data: ",
       paymentData
     );
-
-    onPaymentDataSend(paymentData);
-
+    setPaymentRequestFilteredInvoice(paymentData);
     onRequestPayment();
-    onClose();
+  };
+
+  const handleSendReminder = () => {
+    let filteredInvoices: Invoice[] = [];
+
+    if (activeTab === "Send Reminder") {
+      filteredInvoices = upcomingInvoices;
+      setRenderButtonContent((prev) => ({
+        ...prev,
+        [TabConfig.SEND_REMINDER]: "note",
+      }));
+    }
+
+    const paymentData = customers.map((customer) => ({
+      customerId: customer,
+      invoiceIds: filteredInvoices
+        .filter(
+          (invoice) =>
+            invoice.customerName.trim().toLowerCase() ===
+            customer.name.trim().toLowerCase()
+        )
+        .map((invoice) => invoice.invoiceId),
+    }));
+    console.log(
+      "paymentData",
+      activeTab === "Request Payment"
+        ? "Request Payment data: "
+        : "Send Reminder data: ",
+      paymentData
+    );
+    setSendReminderFilteredinvoice(paymentData);
+    onRequestPayment();
+  };
+
+  const handleSendEmail = () => {
+    if (activeTab === "Request Payment") {
+      handleRequestPayment();
+    } else {
+      handleSendReminder();
+    }
   };
 
   const overdueInvoices = invoices.filter((invoice) =>
@@ -71,6 +115,7 @@ const Modal: React.FC<ModalProps> = ({
   );
   console.log("overdueInvoices => ", overdueInvoices);
   console.log("upcomingInvoices => ", upcomingInvoices);
+
   const handleTabChange = (tab: "Request Payment" | "Send Reminder") => {
     setActiveTab(tab);
   };
@@ -125,10 +170,29 @@ const Modal: React.FC<ModalProps> = ({
     }
   };
 
+  const handleClose = () => {
+    onPaymentDataSend(
+      paymentRequestFilteredInvoice,
+      sendReminderFilteredinvoice
+    );
+    console.log("paymentRequestFilteredInvoice", paymentRequestFilteredInvoice);
+    console.log("sendReminderFilteredinvoice", sendReminderFilteredinvoice);
+    onClose();
+  };
+
+  useEffect(() => {
+    if (actionButtonTitle.includes("Send Reminder")) {
+      setActiveTab("Send Reminder");
+    }
+    if (actionButtonTitle.includes("Request Payment")) {
+      setActiveTab("Request Payment");
+    }
+  }, [actionButtonTitle]);
+
   return (
-    <div className={styles.modalOverlay} onClick={onClose}>
+    <div className={styles.modalOverlay} onClick={handleClose}>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-        <span className={styles.closeIcon} onClick={onClose}>
+        <span className={styles.closeIcon} onClick={handleClose}>
           &times;
         </span>
 
@@ -182,18 +246,32 @@ const Modal: React.FC<ModalProps> = ({
             </div>
           )}
         </div>
-        <div className={styles.sendRequestButtonContainer}>
-          <div
-            className={styles.sendRequestButton}
-            onClick={handleRequestPayment}
-          >
-            <div>
-              {activeTab === "Request Payment"
-                ? "Request Payment via email"
-                : "Send Reminder via email"}
+        {renderButtonContent[activeTab] == "button" ? (
+          <div className={styles.sendRequestButtonContainer}>
+            <div className={styles.sendRequestButton} onClick={handleSendEmail}>
+              <div>
+                {activeTab === "Request Payment"
+                  ? "Request Payment via email"
+                  : "Send Reminder via email"}
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <div className={styles.successMessage}>
+            <FontAwesomeIcon
+              icon={faCircleCheck}
+              style={{ color: "white" }}
+              size="3x"
+            />
+            <div className={styles.messageWrapper}>
+              <div className={styles.title}>Email Initiated</div>
+              <div className={styles.description}>
+                Your payment request has been successfully initiated against the
+                selected invoices
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

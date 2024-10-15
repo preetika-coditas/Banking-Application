@@ -95,6 +95,7 @@
   display: flex;
   gap: 1rem;
   margin-bottom: 20px;
+  cursor: pointer;
 }
 .tabContent {
   background-color: #fff;
@@ -125,4 +126,23 @@
   padding: 1rem;
   color: white;
   width: 80%;
+}
+.successMessage {
+  display: flex;
+  align-items: center;
+  background-color: #127b12;
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  gap: 1rem;
+}
+.messageWrapper {
+  display: block;
+}
+.title {
+  font-weight: 700;
+}
+.description {
+  font-weight: 400;
+  font-size: 10px;
 }

@@ -26,12 +26,7 @@ const CustomerDetails: React.FC<CustomerDetailsProps> = ({
         </div>
         <div className={styles.customerRow}>
           {customerDetails.map((detail) => (
-            <span key={detail.key}>
-              {typeof customer[detail.key] === "string" ||
-              typeof customer[detail.key] === "number"
-                ? customer[detail.key]
-                : ""}
-            </span>
+            <span key={detail.key}>{customer[detail.key]}</span>
           ))}
         </div>
       </div>

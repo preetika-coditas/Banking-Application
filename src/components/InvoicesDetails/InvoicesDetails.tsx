@@ -19,52 +19,56 @@ const InvoicesDetails: React.FC<InvoicesDetailsProps> = ({
     row: Invoice,
     key: keyof Invoice | "documentDetails"
   ) => {
-    if (key === "documentDetails") {
-      const documentType = row.documentType || "";
-      const documentNumber = row.documentNumber || "N/A";
-      const initials = documentType.substring(0, 2).toUpperCase();
-      return `${initials} - ${documentNumber}`;
+    switch (key) {
+      case "documentDetails":
+        const documentType = row.documentType || "";
+        const documentNumber = row.documentNumber || "N/A";
+        const initials = documentType.substring(0, 2).toUpperCase();
+        return `${initials} - ${documentNumber}`;
+
+      case "status":
+        const status = getInvoiceStatus(row.dueDate);
+        const isOverdueStatus = isInvoiceOverdue(row.dueDate);
+        return (
+          <span
+            className={
+              isOverdueStatus ? styles.statusOverdue : styles.statusUpcoming
+            }
+          >
+            {status}
+          </span>
+        );
+
+      case "dueDate":
+        const isOverdueDate = isInvoiceOverdue(row.dueDate);
+        return (
+          <span
+            className={
+              isOverdueDate ? styles.dueDateOverdue : styles.dueDateUpcoming
+            }
+          >
+            {row.dueDate}
+          </span>
+        );
+
+      default:
+        const value = row[key];
+
+        if (Array.isArray(value)) {
+          return value.map((item, index) => (
+            <span key={index}>
+              {item.label}: {item.value}
+              {index < value.length - 1 && ", "}
+            </span>
+          ));
+        }
+
+        if (typeof value === "object" && value !== null) {
+          return JSON.stringify(value);
+        }
+
+        return value !== undefined && value !== null ? value : "N/A";
     }
-
-    if (key === "status") {
-      const status = getInvoiceStatus(row.dueDate);
-      const isOverdue = isInvoiceOverdue(row.dueDate);
-      return (
-        <span
-          className={isOverdue ? styles.statusOverdue : styles.statusUpcoming}
-        >
-          {status}
-        </span>
-      );
-    }
-
-    if (key === "dueDate") {
-      const isOverdue = isInvoiceOverdue(row.dueDate);
-      return (
-        <span
-          className={isOverdue ? styles.dueDateOverdue : styles.dueDateUpcoming}
-        >
-          {row.dueDate}
-        </span>
-      );
-    }
-
-    const value = row[key];
-
-    if (Array.isArray(value)) {
-      return value.map((item, index) => (
-        <span key={index}>
-          {item.label}: {item.value}
-          {index < value.length - 1 && ", "}
-        </span>
-      ));
-    }
-
-    if (typeof value === "object" && value !== null) {
-      return JSON.stringify(value);
-    }
-
-    return value !== undefined && value !== null ? value : "N/A";
   };
 
   return (

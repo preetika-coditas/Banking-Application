@@ -16,7 +16,6 @@ const Modal: React.FC<ModalProps> = ({
   customers,
   onClose,
   actionButtonTitle,
-  onRequestPayment,
   onPaymentDataSend,
 }) => {
   const [activeTab, setActiveTab] = useState(TabConfig.REQUEST_PAYMENT);
@@ -80,7 +79,6 @@ const Modal: React.FC<ModalProps> = ({
     } else {
       setSendReminderFilteredInvoice(paymentData);
     }
-    onRequestPayment();
   };
 
   const handleSendEmail = () => {

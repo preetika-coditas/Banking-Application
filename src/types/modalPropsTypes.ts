@@ -4,7 +4,6 @@ export interface ModalProps {
   customers: Customer[];
   onClose: () => void;
   actionButtonTitle: string;
-  onRequestPayment: () => void;
   onPaymentDataSend: (paymentRequestFilteredInvoice: PaymentEntry[],
     sendReminderFilteredinvoice: PaymentEntry[]) => void; 
   }

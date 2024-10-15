@@ -35,10 +35,6 @@ const CustomerTablePage: React.FC = () => {
     selectedCustomers.length > 0 &&
     selectedCustomers.length < CustomerData.length;
 
-  const handleRequestPayment = () => {
-    // setIsOpenModal(false);
-  };
-
   const handlePaymentDataSend = (
     paymentRequestFilteredInvoice: PaymentEntry[],
     sendReminderFilteredinvoice: PaymentEntry[]
@@ -312,7 +308,6 @@ const CustomerTablePage: React.FC = () => {
           customers={customerDetails}
           onClose={handleCloseIcon}
           actionButtonTitle={getActionButtonTitle()}
-          onRequestPayment={handleRequestPayment}
           onPaymentDataSend={handlePaymentDataSend}
         />
       )}

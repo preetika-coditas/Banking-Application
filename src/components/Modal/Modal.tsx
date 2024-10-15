@@ -5,11 +5,7 @@ import { ModalProps } from "../../types/modalPropsTypes";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 import { TabConfig } from "../../constants/tabConfig";
-import {
-  Customer,
-  Invoice,
-  PaymentEntry,
-} from "../../types/customerTableTypes";
+import { Invoice, PaymentEntry } from "../../types/customerTableTypes";
 import {
   isInvoiceOverdue,
   calculateTotalOverdueAmount,
@@ -32,21 +28,21 @@ const Modal: React.FC<ModalProps> = ({
   });
   const [paymentRequestFilteredInvoice, setPaymentRequestFilteredInvoice] =
     useState<PaymentEntry[]>([]);
-  const [sendReminderFilteredinvoice, setSendReminderFilteredinvoice] =
+  const [sendReminderFilteredInvoice, setSendReminderFilteredInvoice] =
     useState<PaymentEntry[]>([]);
 
-  const handleRequestPayment = () => {
-    let filteredInvoices: Invoice[] = [];
+  const getFilteredInvoices = () => {
+    const overdueInvoices = invoices.filter((invoice) =>
+      isInvoiceOverdue(invoice.dueDate)
+    );
+    const upcomingInvoices = invoices.filter(
+      (invoice) => !isInvoiceOverdue(invoice.dueDate)
+    );
+    return { overdueInvoices, upcomingInvoices };
+  };
 
-    if (activeTab === "Request Payment") {
-      filteredInvoices = overdueInvoices;
-      setRenderButtonContent((prev) => ({
-        ...prev,
-        [TabConfig.REQUEST_PAYMENT]: "note",
-      }));
-    }
-
-    const paymentData = customers.map((customer) => ({
+  const generatePaymentData = (filteredInvoices: Invoice[]) => {
+    return customers.map((customer) => ({
       customerId: customer,
       invoiceIds: filteredInvoices
         .filter(
@@ -56,21 +52,19 @@ const Modal: React.FC<ModalProps> = ({
         )
         .map((invoice) => invoice.invoiceId),
     }));
-    console.log(
-      "paymentData",
-      activeTab === "Request Payment"
-        ? "Request Payment data: "
-        : "Send Reminder data: ",
-      paymentData
-    );
-    setPaymentRequestFilteredInvoice(paymentData);
-    onRequestPayment();
   };
 
-  const handleSendReminder = () => {
+  const handleEmailAction = (tab: string) => {
+    const { overdueInvoices, upcomingInvoices } = getFilteredInvoices();
     let filteredInvoices: Invoice[] = [];
 
-    if (activeTab === "Send Reminder") {
+    if (tab === TabConfig.REQUEST_PAYMENT) {
+      filteredInvoices = overdueInvoices;
+      setRenderButtonContent((prev) => ({
+        ...prev,
+        [TabConfig.REQUEST_PAYMENT]: "note",
+      }));
+    } else {
       filteredInvoices = upcomingInvoices;
       setRenderButtonContent((prev) => ({
         ...prev,
@@ -78,116 +72,60 @@ const Modal: React.FC<ModalProps> = ({
       }));
     }
 
-    const paymentData = customers.map((customer) => ({
-      customerId: customer,
-      invoiceIds: filteredInvoices
-        .filter(
-          (invoice) =>
-            invoice.customerName.trim().toLowerCase() ===
-            customer.name.trim().toLowerCase()
-        )
-        .map((invoice) => invoice.invoiceId),
-    }));
-    console.log(
-      "paymentData",
-      activeTab === "Request Payment"
-        ? "Request Payment data: "
-        : "Send Reminder data: ",
-      paymentData
-    );
-    setSendReminderFilteredinvoice(paymentData);
+    const paymentData = generatePaymentData(filteredInvoices);
+    console.log(`${tab} data:`, paymentData);
+
+    if (tab === TabConfig.REQUEST_PAYMENT) {
+      setPaymentRequestFilteredInvoice(paymentData);
+    } else {
+      setSendReminderFilteredInvoice(paymentData);
+    }
     onRequestPayment();
   };
 
   const handleSendEmail = () => {
-    if (activeTab === "Request Payment") {
-      handleRequestPayment();
-    } else {
-      handleSendReminder();
-    }
-  };
-
-  const overdueInvoices = invoices.filter((invoice) =>
-    isInvoiceOverdue(invoice.dueDate)
-  );
-  const upcomingInvoices = invoices.filter(
-    (invoice) => !isInvoiceOverdue(invoice.dueDate)
-  );
-  console.log("overdueInvoices => ", overdueInvoices);
-  console.log("upcomingInvoices => ", upcomingInvoices);
-
-  const handleTabChange = (tab: "Request Payment" | "Send Reminder") => {
-    setActiveTab(tab);
-  };
-
-  const uniqueUpcomingCustomers = new Set<Customer>();
-
-  upcomingInvoices.forEach((invoice) => {
-    const matchingCustomer = customers.find(
-      (customer) =>
-        customer.name.toLowerCase() === invoice.customerName.toLowerCase() // Handle case differences
-    );
-
-    if (matchingCustomer) {
-      uniqueUpcomingCustomers.add(matchingCustomer);
-    }
-  });
-
-  const uniqueOverdueCustomers = new Set<Customer>();
-
-  overdueInvoices.forEach((invoice) => {
-    const matchingCustomer = customers.find(
-      (customer) =>
-        customer.name.toLowerCase() === invoice.customerName.toLowerCase()
-    );
-
-    if (matchingCustomer) {
-      uniqueOverdueCustomers.add(matchingCustomer);
-    }
-  });
-
-  const overdueCustomerNameArray = Array.from(uniqueOverdueCustomers).map(
-    (item) => item.name
-  );
-
-  const overdueCustomers = () => {
-    if (overdueCustomerNameArray.length > 1) {
-      return "Customers";
-    } else {
-      return overdueCustomerNameArray[0];
-    }
-  };
-
-  const upcomingCustomerNameArray = Array.from(uniqueUpcomingCustomers).map(
-    (item) => item.name
-  );
-
-  const upcomingCustomers = () => {
-    if (upcomingCustomerNameArray.length > 1) {
-      return "Customers";
-    } else {
-      return upcomingCustomerNameArray[0];
-    }
+    handleEmailAction(activeTab);
   };
 
   const handleClose = () => {
     onPaymentDataSend(
       paymentRequestFilteredInvoice,
-      sendReminderFilteredinvoice
+      sendReminderFilteredInvoice
     );
-    console.log("paymentRequestFilteredInvoice", paymentRequestFilteredInvoice);
-    console.log("sendReminderFilteredinvoice", sendReminderFilteredinvoice);
     onClose();
+  };
+
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
   };
 
   useEffect(() => {
     if (actionButtonTitle.includes("Send Reminder")) {
-      setActiveTab("Send Reminder");
+      setActiveTab(TabConfig.SEND_REMINDER);
     }
     if (actionButtonTitle.includes("Request Payment")) {
-      setActiveTab("Request Payment");
+      setActiveTab(TabConfig.REQUEST_PAYMENT);
     }
   }, [actionButtonTitle]);
+
+  const { overdueInvoices, upcomingInvoices } = getFilteredInvoices();
+
+  const uniqueCustomers = (invoices: Invoice[]) => {
+    return Array.from(
+      new Set(
+        invoices.map((invoice) => {
+          const customer = customers.find(
+            (customer) =>
+              customer.name.toLowerCase() === invoice.customerName.toLowerCase()
+          );
+          return customer ? customer.name : null;
+        })
+      )
+    ).filter(Boolean);
+  };
+
+  const overdueCustomers = uniqueCustomers(overdueInvoices);
+  const upcomingCustomers = uniqueCustomers(upcomingInvoices);
 
   return (
     <div className={styles.modalOverlay} onClick={handleClose}>
@@ -198,59 +136,61 @@ const Modal: React.FC<ModalProps> = ({
 
         {overdueInvoices.length > 0 && upcomingInvoices.length > 0 && (
           <div className={styles.tabContainer}>
-            <div
-              className={`${styles.modalTitle} ${
-                activeTab === "Request Payment" ? styles.active : ""
-              }`}
-              onClick={() => handleTabChange("Request Payment")}
-            >
-              Request Payment
-            </div>
-            <div
-              className={`${styles.modalTitle} ${
-                activeTab === "Send Reminder" ? styles.active : ""
-              }`}
-              onClick={() => handleTabChange("Send Reminder")}
-            >
-              Send Reminder
-            </div>
+            {Object.values(TabConfig).map((tab) => (
+              <div
+                key={tab}
+                className={`${styles.modalTitle} ${
+                  activeTab === tab ? styles.active : ""
+                }`}
+                onClick={() => handleTabChange(tab)}
+              >
+                {tab}
+              </div>
+            ))}
           </div>
         )}
 
         <div className={styles.tabContent}>
-          {activeTab === "Request Payment" && overdueInvoices.length > 0 && (
-            <div className={styles.invoiceDetailsContainer}>
-              <div className={styles.invoiceTypeTitle}>Request Payment</div>
-              <Summary
-                invoiceCount={overdueInvoices.length}
-                customerCount={uniqueOverdueCustomers.size}
-                totalAmount={calculateTotalOverdueAmount(
-                  Array.from(overdueInvoices)
-                )}
-                customerName={overdueCustomers()}
-              />
-            </div>
-          )}
+          {activeTab === TabConfig.REQUEST_PAYMENT &&
+            overdueInvoices.length > 0 && (
+              <div className={styles.invoiceDetailsContainer}>
+                <div className={styles.invoiceTypeTitle}>Request Payment</div>
+                <Summary
+                  invoiceCount={overdueInvoices.length}
+                  customerCount={overdueCustomers.length}
+                  totalAmount={calculateTotalOverdueAmount(overdueInvoices)}
+                  customerName={
+                    overdueCustomers.length > 1
+                      ? "Customers"
+                      : overdueCustomers[0]
+                  }
+                />
+              </div>
+            )}
 
-          {activeTab === "Send Reminder" && upcomingInvoices.length > 0 && (
-            <div className={styles.invoiceDetailsContainer}>
-              <div className={styles.invoiceTypeTitle}>Send Reminder</div>
-              <Summary
-                invoiceCount={upcomingInvoices.length}
-                customerCount={uniqueUpcomingCustomers.size}
-                totalAmount={calculateTotalOverdueAmount(
-                  Array.from(upcomingInvoices)
-                )}
-                customerName={upcomingCustomers()}
-              />
-            </div>
-          )}
+          {activeTab === TabConfig.SEND_REMINDER &&
+            upcomingInvoices.length > 0 && (
+              <div className={styles.invoiceDetailsContainer}>
+                <div className={styles.invoiceTypeTitle}>Send Reminder</div>
+                <Summary
+                  invoiceCount={upcomingInvoices.length}
+                  customerCount={upcomingCustomers.length}
+                  totalAmount={calculateTotalOverdueAmount(upcomingInvoices)}
+                  customerName={
+                    upcomingCustomers.length > 1
+                      ? "Customers"
+                      : upcomingCustomers[0]
+                  }
+                />
+              </div>
+            )}
         </div>
-        {renderButtonContent[activeTab] == "button" ? (
+
+        {renderButtonContent[activeTab] === "button" ? (
           <div className={styles.sendRequestButtonContainer}>
             <div className={styles.sendRequestButton} onClick={handleSendEmail}>
               <div>
-                {activeTab === "Request Payment"
+                {activeTab === TabConfig.REQUEST_PAYMENT
                   ? "Request Payment via email"
                   : "Send Reminder via email"}
               </div>
@@ -267,7 +207,7 @@ const Modal: React.FC<ModalProps> = ({
               <div className={styles.title}>Email Initiated</div>
               <div className={styles.description}>
                 Your payment request has been successfully initiated against the
-                selected invoices
+                selected invoices.
               </div>
             </div>
           </div>

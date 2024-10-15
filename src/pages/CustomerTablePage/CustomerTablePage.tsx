@@ -174,15 +174,7 @@ const CustomerTablePage: React.FC = () => {
     setExpandedCustomerId((prev) => (prev === customerId ? null : customerId));
   };
 
-  useEffect(() => {
-    console.log("selected customers details ==> ", customerDetails);
-  }, [customerDetails]);
-
-  useEffect(() => {
-    console.log("selected invoices ==> ", selectedInvoices);
-  }, [selectedInvoices]);
-
-  useEffect(() => {
+  const updatingCheckboxes = () => {
     if (requestPaymentData.length > 0 || sendReminderPaymentData.length > 0) {
       const combinedPaymentData = [
         ...requestPaymentData,
@@ -220,6 +212,17 @@ const CustomerTablePage: React.FC = () => {
         )
       );
     }
+  };
+  useEffect(() => {
+    console.log("selected customers details ==> ", customerDetails);
+  }, [customerDetails]);
+
+  useEffect(() => {
+    console.log("selected invoices ==> ", selectedInvoices);
+  }, [selectedInvoices]);
+
+  useEffect(() => {
+    updatingCheckboxes();
   }, [requestPaymentData, sendReminderPaymentData]);
 
   return (

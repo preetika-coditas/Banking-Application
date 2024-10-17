@@ -3,7 +3,7 @@ import CustomerTablePage from "./pages/CustomerTablePage/CustomerTablePage";
 
 function App() {
   return (
-    <div className="dashboard-container">
+    <div>
       <CustomerTablePage />
     </div>
   );
